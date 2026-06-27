@@ -121,7 +121,7 @@ html, body {
 
 /* FINAL */
 .final-bd { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 24px 18px; overflow-y: auto; }
-.final-check { width: 68px; height: 68px; background: var(--verde-lt); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+.final-check { width: 68px; height: 68px; margin: 0 auto 20px; background: var(--verde-lt); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
 .final-titulo { font-size: 26px; font-weight: 800; color: var(--negro); line-height: 1.2; text-align: center; margin-bottom: 12px; }
 .final-sub { font-size: 16px; color: var(--gris1); line-height: 1.6; text-align: center; margin-bottom: 24px; }
 .pregunta { background: var(--verde-lt); border-radius: 16px; padding: 20px; font-size: 19px; font-weight: 600; color: var(--verde-dk); line-height: 1.5; text-align: center; margin-bottom: 12px; }
@@ -187,7 +187,7 @@ html, body {
       <div class="card-tag rojo">Hoy</div>
       <div class="card-item"><span class="ico">✗</span><span class="txt rojo">Anotan nombres en un papel</span></div>
       <div class="card-item"><span class="ico">✗</span><span class="txt rojo">Los clientes preguntan constantemente cuánto falta</span></div>
-      <div class="card-item"><span class="ico">✗</span><span class="txt rojo">El empleado para lo que hace para responder</span></div>
+      <div class="card-item"><span class="ico">✗</span><span class="txt rojo">El empleado deja de atender para responder</span></div>
       <div class="card-item"><span class="ico">✗</span><span class="txt rojo">Llaman a los gritos</span></div>
     </div>
   </div>
@@ -311,19 +311,43 @@ html, body {
     <div class="hd-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
     <div><div class="hd-titulo">Turnera</div><div class="hd-sub">Lista de espera</div></div>
   </div>
-  <div class="final-bd">
+  <div class="bd">
     <div class="final-check">
       <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
     <div class="final-titulo">Más orden.<br>Menos interrupciones.<br>Clientes informados.</div>
-    <div class="final-sub">Sin cambiar cómo trabajás.<br>Sin instalar nada extra.</div>
-    <div class="pregunta">Si lo probamos 15 días en tu negocio sin costo, ¿lo harías?</div>
-    <div class="pregunta2">¿Qué cambiarías para que realmente te sirva acá?</div>
+    <div style="height:16px"></div>
+    <div class="pregunta">¿Qué cambiarías para que realmente te sirva acá?</div>
+    <textarea id="txt-respuesta" placeholder="Escribí acá..." style="width:100%;border:1.5px solid #e2e2e0;border-radius:14px;padding:16px;font-size:17px;font-family:-apple-system,sans-serif;min-height:90px;margin-bottom:12px;background:#fff;color:#0f0f0f;resize:none;"></textarea>
+  </div>
+  <div class="ft">
+    <button class="btn-sig" style="background:#085041;" onclick="enviar('Sí, me interesa')">Sí, quiero probarlo 15 días →</button>
+    <button class="btn-vol" onclick="enviar('Necesito más información')">Necesito más información</button>
     <button class="btn-reiniciar" onclick="ir('s0')">Ver de nuevo</button>
   </div>
 </div>
 
+<!-- GRACIAS -->
+<div class="screen" id="s8">
+  <div class="hd">
+    <div class="hd-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <div><div class="hd-titulo">Turnera</div><div class="hd-sub">Lista de espera</div></div>
+  </div>
+  <div class="final-bd" style="text-align:center;">
+    <div style="font-size:56px;margin-bottom:20px;">🙌</div>
+    <div class="final-titulo">¡Gracias!</div>
+    <div class="final-sub">Tu respuesta quedó guardada.<br>Leonardo te contacta en las próximas horas.</div>
+    <div style="background:#E8F7F2;border-radius:16px;padding:20px;margin-top:24px;">
+      <div style="font-size:15px;color:#085041;line-height:1.6;">turnera-digital.web.app<br>lcostucica@gmail.com<br>011 6731 3343</div>
+    </div>
+  </div>
+</div>
+
 <script>
+var _nombre = "", _tipo = "", _dolor = "";
+var FORM = "https://forms.gle/px3KG6jcMyqSRXf38";
+var WA   = "5491167313343";
+
 var escenas = {
   parrilla: "Son las 13:30 del domingo.",
   barberia: "Son las 18 hs. Entran clientes cada cinco minutos.",
@@ -333,15 +357,27 @@ var escenas = {
 };
 
 function iniciar() {
-  var nombre = document.getElementById('inp-nombre').value.trim() || 'Tu negocio';
-  var zona   = document.getElementById('inp-zona').value.trim();
-  var tipo   = document.getElementById('sel-tipo').value;
-  var local  = nombre + (zona ? ' · ' + zona : '');
-  var escena = escenas[tipo];
+  _nombre = document.getElementById('inp-nombre').value.trim() || 'Tu negocio';
+  var zona = document.getElementById('inp-zona').value.trim();
+  _tipo   = document.getElementById('sel-tipo').value;
+  _dolor  = "Lista de espera";
+  var local  = _nombre + (zona ? ' · ' + zona : '');
+  var escena = escenas[_tipo];
 
   ['local-2','local-3','local-4'].forEach(function(id){ document.getElementById(id).textContent = local; });
   ['escena-2','escena-3'].forEach(function(id){ document.getElementById(id).textContent = escena; });
   ir('s1');
+}
+
+function enviar(quiere) {
+  var respuesta = document.getElementById('txt-respuesta').value.trim();
+  var msg = "Hola Leonardo! Vi la demo de Turnera (Lista de espera).%0A%0A"
+    + "*Negocio:* " + encodeURIComponent(_nombre) + "%0A"
+    + "*Tipo:* " + encodeURIComponent(_tipo) + "%0A"
+    + "*Respuesta:* " + encodeURIComponent(respuesta || "(sin comentario)") + "%0A"
+    + "*Piloto:* " + encodeURIComponent(quiere);
+  window.open("https://wa.me/" + WA + "?text=" + msg, "_blank");
+  ir('s8');
 }
 
 function ir(id) {
