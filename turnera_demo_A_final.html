@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Turnera</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --verde: #1D9E75;
+  --verde-dk: #085041;
+  --verde-lt: #E8F7F2;
+  --negro: #0f0f0f;
+  --gris1: #444;
+  --gris2: #888;
+  --gris3: #f0f0ee;
+  --borde: #e2e2e0;
+  --rojo-lt: #fef2f2;
+  --rojo: #dc2626;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #fafaf8;
+  color: var(--negro);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; min-height: 100vh; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ── HEADER ── */
+.hd {
+  padding: 18px 22px 16px;
+  background: #fff;
+  border-bottom: 1px solid var(--borde);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.hd-logo {
+  width: 38px; height: 38px;
+  background: var(--verde);
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.hd-logo svg { width: 22px; height: 22px; }
+.hd-txt { flex: 1; }
+.hd-titulo { font-size: 17px; font-weight: 700; color: var(--negro); }
+.hd-sub { font-size: 13px; color: var(--gris2); margin-top: 1px; }
+.hd-paso { font-size: 12px; color: var(--gris2); background: var(--gris3); padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
+
+/* ── BODY ── */
+.bd { flex: 1; padding: 28px 22px 12px; overflow-y: auto; }
+
+/* ── TIPOGRAFÍA GRANDE ── */
+.titulo-grande {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--negro);
+  line-height: 1.25;
+  margin-bottom: 10px;
+}
+.subtitulo {
+  font-size: 17px;
+  color: var(--gris1);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* ── TARJETAS ── */
+.card {
+  border-radius: 18px;
+  padding: 22px;
+  margin-bottom: 16px;
+}
+.card.problema {
+  background: var(--rojo-lt);
+  border: 1px solid #fecaca;
+}
+.card.solucion {
+  background: var(--verde-lt);
+  border: 1px solid #a7f3d0;
+}
+.card.neutro {
+  background: var(--gris3);
+  border: 1px solid var(--borde);
+}
+.card-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.card-tag.rojo { color: var(--rojo); }
+.card-tag.verde { color: var(--verde-dk); }
+.card-tag.gris { color: var(--gris2); }
+.card-txt {
+  font-size: 17px;
+  line-height: 1.6;
+}
+.card-txt.rojo { color: #7f1d1d; }
+.card-txt.verde { color: var(--verde-dk); }
+.card-txt.negro { color: var(--negro); }
+
+/* ── COMPARACIÓN ── */
+.comp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.comp-col {
+  border-radius: 16px;
+  padding: 18px 16px;
+}
+.comp-col.hoy { background: var(--rojo-lt); border: 1px solid #fecaca; }
+.comp-col.con { background: var(--verde-lt); border: 1px solid #a7f3d0; }
+.comp-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.comp-label.rojo { color: var(--rojo); }
+.comp-label.verde { color: var(--verde-dk); }
+.comp-item {
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 8px;
+}
+.comp-item .ico { flex-shrink: 0; font-size: 14px; margin-top: 1px; }
+.comp-item .txt.rojo { color: #7f1d1d; }
+.comp-item .txt.verde { color: var(--verde-dk); }
+
+/* ── PANTALLA EMOCIONAL ── */
+.emocional {
+  flex: 1;
+  background: var(--negro);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 28px;
+}
+.emocional-txt {
+  font-size: 24px;
+  color: #fff;
+  line-height: 1.6;
+}
+.emocional-txt strong { color: #6EE7B7; }
+.emocional-footer {
+  background: var(--negro);
+  padding: 20px 22px 40px;
+}
+
+/* ── NÚMERO GRANDE ── */
+.num-display {
+  background: var(--verde);
+  border-radius: 20px;
+  padding: 28px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.num-display .num {
+  font-size: 80px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+.num-display .num-lbl {
+  font-size: 14px;
+  color: #6EE7B7;
+  margin-top: 6px;
+}
+
+.frase-destacada {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--verde-dk);
+  text-align: center;
+  background: var(--verde-lt);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+/* ── STATS ── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.stat {
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  padding: 14px 8px;
+  text-align: center;
+}
+.stat-val {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--negro);
+}
+.stat-lbl {
+  font-size: 11px;
+  color: var(--gris2);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+/* ── PROGRESO ── */
+.progreso { margin-bottom: 20px; }
+.prog-track {
+  background: var(--gris3);
+  border-radius: 6px;
+  height: 8px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+.prog-fill {
+  background: var(--verde);
+  height: 8px;
+  border-radius: 6px;
+  width: 55%;
+}
+.prog-lbls {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--gris2);
+}
+
+/* ── AVISO ── */
+.aviso {
+  background: var(--verde-lt);
+  border: 1.5px solid #6EE7B7;
+  border-radius: 20px;
+  padding: 28px 22px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+.aviso-icon { font-size: 44px; margin-bottom: 12px; }
+.aviso-titulo {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--verde-dk);
+  margin-bottom: 8px;
+}
+.aviso-sub {
+  font-size: 16px;
+  color: #065f46;
+  line-height: 1.5;
+}
+.aviso-btn {
+  width: 100%;
+  background: var(--verde);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 18px;
+  opacity: 0.75;
+}
+
+/* ── PILL ── */
+.pill {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.pill-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--verde);
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+.pill-txt { font-size: 15px; color: var(--gris1); line-height: 1.5; }
+
+/* ── FOOTER CON BOTONES ── */
+.ft {
+  padding: 16px 22px 36px;
+  background: #fafaf8;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.btn-sig {
+  width: 100%;
+  background: var(--verde);
+  color: #fff;
+  border: none;
+  border-radius: 16px;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: -0.2px;
+}
+.btn-sig:active { opacity: 0.85; transform: scale(0.99); }
+.btn-vol {
+  width: 100%;
+  background: transparent;
+  color: var(--gris2);
+  border: 1px solid var(--borde);
+  border-radius: 16px;
+  padding: 17px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* ── SETUP ── */
+.setup-bd { flex: 1; padding: 32px 22px; }
+.setup-lbl { font-size: 14px; font-weight: 600; color: var(--gris1); margin-bottom: 8px; }
+.setup-inp {
+  width: 100%;
+  border: 1.5px solid var(--borde);
+  border-radius: 14px;
+  padding: 18px;
+  font-size: 18px;
+  background: #fff;
+  color: var(--negro);
+  margin-bottom: 20px;
+}
+.setup-inp:focus { outline: none; border-color: var(--verde); }
+.setup-sel {
+  width: 100%;
+  border: 1.5px solid var(--borde);
+  border-radius: 14px;
+  padding: 18px;
+  font-size: 17px;
+  background: #fff;
+  color: var(--negro);
+  margin-bottom: 28px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+/* ── FINAL ── */
+.final-bd {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 22px;
+}
+.final-check {
+  width: 72px; height: 72px;
+  background: var(--verde-lt);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 24px;
+}
+.final-titulo {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--negro);
+  line-height: 1.2;
+  text-align: center;
+  margin-bottom: 12px;
+}
+.final-sub {
+  font-size: 17px;
+  color: var(--gris1);
+  line-height: 1.6;
+  text-align: center;
+  margin-bottom: 32px;
+}
+.pregunta {
+  background: var(--verde-lt);
+  border-radius: 18px;
+  padding: 24px;
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--verde-dk);
+  line-height: 1.5;
+  text-align: center;
+  margin-bottom: 14px;
+}
+.pregunta2 {
+  background: var(--gris3);
+  border-radius: 18px;
+  padding: 20px;
+  font-size: 17px;
+  color: var(--negro);
+  line-height: 1.5;
+  text-align: center;
+  margin-bottom: 28px;
+}
+.btn-reiniciar {
+  width: 100%;
+  background: var(--gris3);
+  border: none;
+  border-radius: 16px;
+  padding: 17px;
+  font-size: 16px;
+  color: var(--gris2);
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ SETUP ═══ -->
+<div class="screen active" id="s0">
+  <div class="hd">
+    <div class="hd-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg></div>
+    <div class="hd-txt"><div class="hd-titulo">Turnera</div><div class="hd-sub">Demo — Lista de espera</div></div>
+  </div>
+  <div class="setup-bd">
+    <div class="titulo-grande" style="margin-bottom:8px;">Antes de empezar</div>
+    <div class="subtitulo" style="margin-bottom:28px;">Personalizá la demo para que el dueño se vea reflejado.</div>
+    <div class="setup-lbl">Nombre del negocio</div>
+    <input class="setup-inp" id="inp-nombre" type="text" placeholder="Ej: Parrilla de Jorge" autocomplete="off" />
+    <div class="setup-lbl">Barrio o zona</div>
+    <input class="setup-inp" id="inp-zona" type="text" placeholder="Ej: Flores, Caballito..." autocomplete="off" />
+    <div class="setup-lbl">Tipo de negocio</div>
+    <select class="setup-sel" id="sel-tipo">
+      <option value="parrilla">Parrilla / Restaurante</option>
+      <option value="barberia">Barbería</option>
+      <option value="farmacia">Farmacia</option>
+      <option value="pastas">Casa de pastas</option>
+      <option value="otro">Otro comercio</option>
+    </select>
+  </div>
+  <div class="ft">
+    <button class="btn-sig" onclick="iniciar()">Empezar →</button>
+  </div>
+</div>
+
+<!-- ═══ PANTALLA NEGRA ═══ -->
+<div class="screen" id="s1">
+  <div class="emocional">
+    <div class="emocional-txt">
+      Mientras tus empleados responden<br>
+      <strong>"¿cuánto falta?"</strong><br><br>
+      dejan de atender<br>
+      a los demás.
+    </div>
+  </div>
+  <div class="emocional-footer">
+    <button class="btn-sig" onclick="ir('s2')" style="background:var(--verde);">Ver qué cambia →</button>
+  </div>
+</div>
+
+<!-- ═══ COMPARACIÓN ═══ -->
+<div class="screen" id="s2">
+  <div class="hd">
+    <div class="hd-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+    <div class="hd-txt"><div class="hd-titulo">Turnera</div><div class="hd-sub" id="local-hd-2">Lista de espera</div></div>
+    <div class="hd-paso">1 de 3</div>
+  </div>
+  <div class="bd">
+    <div class="titulo-grande" style="margin-bottom:20px;" id="escena-titulo">Son las 13:30 del domingo.</div>
+    <div class="comp-grid">
+      <div class="comp-col hoy">
+        <div class="comp-label rojo">Hoy</div>
+        <div class="comp-item"><span class="ico">✗</span><span class="txt rojo">Anotan nombres en papel</span></div>
+        <div class="comp-item"><span class="ico">✗</span><span class="txt rojo">Responden "¿cuánto falta?" todo el tiempo</span></div>
+        <div class="comp-item"><span class="ico">✗</span><span class="txt rojo">Llaman a los gritos</span></div>
+      </div>
+      <div class="comp-col con">
+        <div class="comp-label verde">Con Turnera</div>
+        <div class="comp-item"><span class="ico">✓</span><span class="txt verde">Cliente se anota solo</span></div>
+        <div class="comp-item"><span class="ico">✓</span><span class="txt verde">Ve cuánto falta en su celular</span></div>
+        <div class="comp-item"><span class="ico">✓</span><span class="txt verde">Recibe aviso cuando le toca</span></div>
+      </div>
+    </div>
+    <div class="pill">
+      <div class="pill-dot"></div>
+      <div class="pill-txt">Sin cambiar cómo trabajás. Sin instalar nada. Sin hardware.</div>
+    </div>
+  </div>
+  <div class="ft">
+    <button class="btn-sig" onclick="ir('s3')">¿Cómo lo ve el cliente? →</button>
+    <button class="btn-vol" onclick="ir('s1')">Volver</button>
+  </div>
+</div>
+
+<!-- ═══ TURNO EN CELULAR ═══ -->
+<div class="screen" id="s3">
+  <div class="hd">
+    <div class="hd-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+    <div class="hd-txt"><div class="hd-titulo">Turnera</div><div class="hd-sub" id="local-hd-3">El cliente</div></div>
+    <div class="hd-paso">2 de 3</div>
+  </div>
+  <div class="bd">
+    <div class="subtitulo">El cliente se anota y esto es lo que ve en su propio celular.</div>
+    <div class="num-display">
+      <div class="num">07</div>
+      <div class="num-lbl">tu número en la fila</div>
+    </div>
+    <div class="frase-destacada">No hace falta quedarse esperando.</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-val">04</div><div class="stat-lbl">turno actual</div></div>
+      <div class="stat"><div class="stat-val">3</div><div class="stat-lbl">adelante tuyo</div></div>
+      <div class="stat"><div class="stat-val">~20'</div><div class="stat-lbl">estimado</div></div>
+    </div>
+    <div class="progreso">
+      <div class="prog-track"><div class="prog-fill"></div></div>
+      <div class="prog-lbls"><span>Turno 1</span><span>Tu turno: 7</span></div>
+    </div>
+  </div>
+  <div class="ft">
+    <button class="btn-sig" onclick="ir('s4')">Le llega el aviso →</button>
+    <button class="btn-vol" onclick="ir('s2')">Volver</button>
+  </div>
+</div>
+
+<!-- ═══ AVISO ═══ -->
+<div class="screen" id="s4">
+  <div class="hd">
+    <div class="hd-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+    <div class="hd-txt"><div class="hd-titulo">Turnera</div><div class="hd-sub">El aviso llega solo</div></div>
+    <div class="hd-paso">3 de 3</div>
+  </div>
+  <div class="bd">
+    <div class="subtitulo">Cuando faltan 2 turnos, el sistema avisa al cliente. El negocio no hace nada.</div>
+    <div class="aviso">
+      <div class="aviso-icon">🔔</div>
+      <div class="aviso-titulo">¡Casi es tu turno!</div>
+      <div class="aviso-sub">Turno 06 siendo atendido.<br>Volvé en los próximos minutos.</div>
+      <button class="aviso-btn">Voy para allá</button>
+    </div>
+    <div class="pill">
+      <div class="pill-dot"></div>
+      <div class="pill-txt">El negocio no llamó a nadie. El sistema lo hizo solo.</div>
+    </div>
+  </div>
+  <div class="ft">
+    <button class="btn-sig" onclick="ir('s5')">¿Lo probarías? →</button>
+    <button class="btn-vol" onclick="ir('s3')">Volver</button>
+  </div>
+</div>
+
+<!-- ═══ CIERRE ═══ -->
+<div class="screen" id="s5">
+  <div class="hd">
+    <div class="hd-logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <div class="hd-txt"><div class="hd-titulo">Turnera</div><div class="hd-sub">Lista de espera</div></div>
+  </div>
+  <div class="final-bd">
+    <div class="final-check">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="final-titulo">Más orden.<br>Menos interrupciones.<br>Clientes informados.</div>
+    <div class="final-sub">Sin cambiar cómo trabajás.<br>Sin instalar nada extra.</div>
+    <div class="pregunta">Si lo probamos 15 días en tu negocio sin costo, ¿lo harías?</div>
+    <div class="pregunta2">¿Qué cambiarías para que realmente te sirva acá?</div>
+    <button class="btn-reiniciar" onclick="ir('s0')">Ver de nuevo</button>
+  </div>
+</div>
+
+<script>
+var escenas = {
+  parrilla: { titulo: "Son las 13:30 del domingo.", local: "Parrilla" },
+  barberia: { titulo: "Son las 18 hs. Entran clientes cada cinco minutos.", local: "Barbería" },
+  farmacia: { titulo: "Hay fila en el mostrador. Varios preguntan cuánto falta.", local: "Farmacia" },
+  pastas:   { titulo: "El fin de semana hay gente esperando en la vereda.", local: "Casa de pastas" },
+  otro:     { titulo: "Hay fila. Nadie sabe exactamente cuánto falta.", local: "Negocio" }
+};
+
+function iniciar() {
+  var nombre = document.getElementById('inp-nombre').value.trim() || 'Tu negocio';
+  var zona   = document.getElementById('inp-zona').value.trim();
+  var tipo   = document.getElementById('sel-tipo').value;
+  var e      = escenas[tipo];
+  var local  = nombre + (zona ? ' · ' + zona : '');
+
+  document.getElementById('escena-titulo').textContent = e.titulo;
+  document.getElementById('local-hd-2').textContent = local;
+  document.getElementById('local-hd-3').textContent = local;
+  ir('s1');
+}
+
+function ir(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+document.getElementById('inp-nombre').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') document.getElementById('inp-zona').focus();
+});
+document.getElementById('inp-zona').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') iniciar();
+});
+</script>
+</body>
+</html>
