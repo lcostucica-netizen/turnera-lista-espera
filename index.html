@@ -344,9 +344,17 @@ html, body {
 </div>
 
 <script>
-var _nombre = "", _tipo = "", _dolor = "";
-var FORM = "https://forms.gle/px3KG6jcMyqSRXf38";
+var _nombre = "", _tipo = "", _tipoLabel = "";
+var FORM = "https://docs.google.com/forms/d/e/1FAIpQLSeqohc-w0za30JZAhlXl3k0APCoSYAr3A5zV7FhrptIndRm1A/formResponse";
 var WA   = "5491167313343";
+
+var tiposNegocio = {
+  parrilla: "Parrilla / Restaurante",
+  barberia:  "Barberia",
+  farmacia:  "Farmacia",
+  pastas:    "Otro",
+  otro:      "Otro"
+};
 
 var escenas = {
   parrilla: "Son las 13:30 del domingo.",
@@ -357,10 +365,10 @@ var escenas = {
 };
 
 function iniciar() {
-  _nombre = document.getElementById('inp-nombre').value.trim() || 'Tu negocio';
-  var zona = document.getElementById('inp-zona').value.trim();
-  _tipo   = document.getElementById('sel-tipo').value;
-  _dolor  = "Lista de espera";
+  _nombre    = document.getElementById('inp-nombre').value.trim() || 'Tu negocio';
+  var zona   = document.getElementById('inp-zona').value.trim();
+  _tipo      = document.getElementById('sel-tipo').value;
+  _tipoLabel = tiposNegocio[_tipo];
   var local  = _nombre + (zona ? ' · ' + zona : '');
   var escena = escenas[_tipo];
 
@@ -370,13 +378,27 @@ function iniciar() {
 }
 
 function enviar(quiere) {
-  var respuesta = document.getElementById('txt-respuesta').value.trim();
+  var respuesta = document.getElementById('txt-respuesta').value.trim() || "(sin comentario)";
+
+  // 1. Guardar en Google Form (silencioso)
+  var params = new URLSearchParams({
+    "entry.333432293": _nombre,
+    "entry.97779645":  _tipoLabel,
+    "entry.891579392": "Los clientes preguntan constantemente",
+    "entry.2098720063": respuesta,
+    "entry.1810345489": quiere
+  });
+  var img = new Image();
+  img.src = FORM + "?" + params.toString();
+
+  // 2. Abrir WhatsApp
   var msg = "Hola Leonardo! Vi la demo de Turnera (Lista de espera).%0A%0A"
     + "*Negocio:* " + encodeURIComponent(_nombre) + "%0A"
-    + "*Tipo:* " + encodeURIComponent(_tipo) + "%0A"
-    + "*Respuesta:* " + encodeURIComponent(respuesta || "(sin comentario)") + "%0A"
+    + "*Tipo:* " + encodeURIComponent(_tipoLabel) + "%0A"
+    + "*Qué cambiaría:* " + encodeURIComponent(respuesta) + "%0A"
     + "*Piloto:* " + encodeURIComponent(quiere);
   window.open("https://wa.me/" + WA + "?text=" + msg, "_blank");
+
   ir('s8');
 }
 
